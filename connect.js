@@ -1,6 +1,5 @@
-let mysql = require('mysql')
-import 'dotenv/config'
-require('dotenv').config("./phase 1/.env")
+let mysql = require('mysql2')
+require('dotenv').config();
 
 let connection = mysql.createConnection({
     host: process.env.DB_HOST,
@@ -11,7 +10,7 @@ let connection = mysql.createConnection({
 });
 
 connection.connect((err) => {
-    if (err) return console.error(err.message);
+    if (err) return console.error('MySQL Connection Error: ', err.message);
 
-    console.log("MySQL Connection: Complete")
+    console.log("MySQL Connection: Complete");
 });
