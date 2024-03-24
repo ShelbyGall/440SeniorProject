@@ -41,7 +41,13 @@ app.post('/login', (req, res) =>{
         if (results && results.length > 0){
             console.log("Login Successful: ", username);
             res.redirect('/home.html');
-        } else {
+        } 
+        else if (error) {
+            console.log("\n=========================ERROR=========================")
+            console.error("Error logging in user: ", error)
+            console.log("==========================================================\n")
+        }
+        else {
             console.log("Login Attempt Failed")
             res.redirect('/index.html')
         }
@@ -56,8 +62,12 @@ app.post('/register', (req, res) => {
     // runs the query (passing the 5 argumemnts into it) & runs the callback function
     connection.query(query, [username, password, firstName, lastName, email], (error, results) => {
         if(error) {
+            console.log("\n=========================ERROR=========================")
             console.error("Error inserting user: ", error)
-            return res.status(500).send("An error occured during registeration. Look at terminal!")
+            console.log("==========================================================\n")
+
+            res.redirect("./register.html")
+            // res.status(500).send("An error occured during registeration. Look at terminal!")
         } else {
             console.log("User registered successfully: ", username)
             res.redirect("/index.html")
