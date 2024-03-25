@@ -2,6 +2,23 @@ const express = require('express');
 const mysql = require('mysql2');
 const dotenv = require('dotenv');
 
+
+
+function inputValidation(inputs) {
+    const invalidChar = new Set(['-','=',';','"',"'",',']) 
+
+    for (let k = 0; k < inputs.length; k++)
+        for (let i = 0; i < inputs[k].length; i++) 
+            if (invalidChar.has(inputs[k][i]))
+                return false
+ 
+    return true
+}
+
+
+
+
+
 // Load environment variables
 dotenv.config();
 
@@ -36,16 +53,28 @@ app.post('/login', (req, res) =>{
     const {username, password} = req.body; // stores user's inputs inside 'username' & 'password'
     const query = "SELECT * FROM user WHERE username = ? AND password = ?"; // defines query with value placeholders called '?'
 
-    // runs the query (passing 'username'/'password' values into it) & runs the callback function
-    connection.query(query, [username, password], (error, results) => {
-        if (results && results.length > 0){
-            console.log("Login Successful: ", username);
-            res.redirect('/home.html');
-        } else {
-            console.log("Login Attempt Failed")
-            res.redirect('/index.html')
-        }
-    });
+    if (inputValidation([username, password])) {
+        // runs the query (passing 'username'/'password' values into it) & runs the callback function
+        connection.execute(query, [username, password], (error, results) => {
+            if (results && results.length > 0){
+                console.log("Login Successful: ", username);
+                res.redirect('/home.html');
+            } 
+            else if (error) {
+                console.log("\n=========================ERROR=========================")
+                console.error("Error logging in user: ", error)
+                console.log("==========================================================\n")
+            }
+            else {
+                console.log("Login Attempt Failed")
+                res.redirect('/index.html')
+            }
+        });
+    }
+    else {
+        console.log("Malicious Input detected - input aborted")
+        res.redirect('/index.html')
+    }
 }); 
 
 // called when user submits their registration info
@@ -53,17 +82,32 @@ app.post('/register', (req, res) => {
     const { email, username, password, confirm_password, firstName, lastName } = req.body; // stores user's registration info
     const query = "INSERT INTO user VALUES(?, ?, ?, ?, ?)"; // defines query with value placeholders called '?'
 
-    // runs the query (passing the 5 argumemnts into it) & runs the callback function
-    connection.query(query, [username, password, firstName, lastName, email], (error, results) => {
-        if(error) {
-            console.error("Error inserting user: ", error)
-            return res.status(500).send("An error occured during registeration. Look at terminal!")
-        } else {
-            console.log("User registered successfully: ", username)
-            res.redirect("/index.html")
-        }
-    });
+    if (password === confirm_password && inputValidation([email, username, password, firstName, lastName])){
+        // runs the query (passing the 5 argumemnts into it) & runs the callback function
+        connection.execute(query, [username, password, firstName, lastName, email], (error, results) => {
+            if(error) {
+                console.log("\n=========================ERROR=========================")
+                console.error("Error inserting user: ", error)
+                console.log("==========================================================\n")
 
+                res.redirect("./register.html")
+                // res.status(500).send("An error occured during registeration. Look at terminal!")
+            } else {
+                console.log("User registered successfully: ", username)
+                res.redirect("/index.html")
+            }
+        });
+    }
+    else {
+        if (!(password === confirm_password)) {
+            console.log("Passwords dont match")
+            res.redirect("./register.html")
+        }
+        else { 
+            console.log("Malicious Input detected - input aborted")
+            res.redirect("./register.html")
+        }
+    }
 });
 
 
