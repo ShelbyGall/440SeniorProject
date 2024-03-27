@@ -3,4 +3,4 @@ Authors:
     Shelby Gallegos
     Rishabh Chadha
 
-YOUTUBE DEMO: 
+YOUTUBE Phase 1 DEMO: https://www.youtube.com/watch?v=zhiK6x5Fm04
