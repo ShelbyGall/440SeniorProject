@@ -4,12 +4,133 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    <link rel="stylesheet" href="index.css"> <!-- Assuming you're using index.css for styling -->
+
+    <style>
+        .forms-section {
+          display: flex;
+          justify-content: space-around; /* This will place space around each column */
+          gap: 150px; /* Adjust the gap between columns */
+          margin: 20px 0;
+        }
+      
+        .form-column {
+          flex: 1; /* Flex-grow */
+          max-width: 350px;
+          min-width: 150px; /* Minimum width for columns to prevent squishing */
+          padding: 0 10px; /* Padding inside each column */
+        }
+      
+        .container {
+          max-width: 1000px; /* Adjust the max-width as needed */
+          margin: 0 auto; /* Center the container */
+          padding: 20px;
+          background-color: white;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          border-radius: 5px;
+          text-align: center;
+        }
+      
+        input[type="text"],
+        input[type="number"],
+        input[type="submit"],
+        textarea {
+          width: 100%; /* Full width of parent */
+          padding: 10px;
+          margin-bottom: 10px; /* Add space between form elements */
+          border: 1px solid #ddd;
+          border-radius: 5px;
+          box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        }
+      
+        input[type="submit"] {
+          background-color: #4CAF50;
+          color: white;
+          border: none;
+          cursor: pointer;
+        }
+      
+        input[type="submit"]:hover {
+          opacity: 0.9;
+        }
+      
+        a {
+          color: #007bff;
+          text-decoration: none;
+        }
+      
+        a:hover {
+          text-decoration: underline;
+        }
+      
+        @media (max-width: 768px) {
+          .forms-section {
+            flex-direction: column;
+            gap: 20px;
+          }
+      
+          .form-column {
+            padding: 0;
+            min-width: 0; 
+          }
+        }
+      </style>
+      
 </head>
 <body>
     <div class="container">
         <h1>Welcome Home!</h1>
         <p>You have successfully logged in.</p>
+
+        <!-- Form section with two columns -->
+        <div class="forms-section">
+            <!-- left column for adding new items -->
+            <div class="form-column">
+                <h2>Add New Item</h2>
+                <!-- form for adding items here -->
+                <form action="/post-item" method="POST" id="addItemForm">
+                    <div class="form-group">
+                        <label for="title">Title:</label>
+                        <input type="text" name="title" id="title" placeholder="Title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description:</label>
+                        <textarea name="description" id="description" placeholder="Description" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category:</label>
+                        <input type="text" name="category" id="category" placeholder="Category" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Price:</label>
+                        <input type="number" name="price" id="price" placeholder="Price" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit">Post Item</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- right column for searching items -->
+            <div class="form-column">
+                <h2>Search Items</h2>
+                <!-- form for searching items here -->
+                <form action="/search-items" method="GET" id="searchItemsForm">
+                    <div class="form-group">
+                        <label for="searchCategory">Category:</label>
+                        <input type="text" name="category" id="searchCategory" placeholder="Enter category" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit">Search</button>
+                    </div>
+                </form>
+                
+                <!-- Results should be populated here -->
+                <div id="searchResults">
+                    <!-- placeholder for search results -->
+                </div>
+            </div>
+        </div>
+
         <a href="./index.html">Logout</a>
     </div>
 </body>
