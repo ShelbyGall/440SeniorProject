@@ -80,6 +80,7 @@
     <div class="container">
         <h1>Welcome Home!</h1>
         <p>You have successfully logged in.</p>
+        
 
         <!-- Form section with two columns -->
         <div class="forms-section">
@@ -105,9 +106,14 @@
                         <input type="number" name="price" id="price" placeholder="Price" required>
                     </div>
                     <div class="form-group">
-                        <button type="submit">Post Item</button>
+                        <button id="post-item-button" type="submit">Post Item</button>
                     </div>
+
+                    <input name="username" id="user-in" type="hidden"></input>
+                    <input name="postDate" id="post-date" type="hidden"></input>
+
                 </form>
+                
             </div>
 
             <!-- right column for searching items -->
@@ -131,7 +137,25 @@
             </div>
         </div>
 
-        <a href="./index.html">Logout</a>
+
+        <a id="logout-button" href="./index.html">Logout</a>
+        <script>
+          localStorage.setItem("confirm", true)
+          document.getElementById("logout-button").addEventListener("click", function() {
+            localStorage.clear()
+          })
+
+          document.getElementById("post-item-button").addEventListener("click", function() {
+            document.getElementById("user-in").value = localStorage.getItem("user")
+            const date = new Date();
+            const pstOffset = -8 * 60; // Pacific Standard Time offset is UTC-8
+            const pstDate = new Date(date.getTime() + (pstOffset * 60 * 1000));
+
+            console.log(pstDate.toJSON()); // This will give you the date and time in PST
+            document.getElementById("post-date").value = pstDate.toJSON().slice(0,10)
+          })
+
+        </script>
     </div>
 </body>
 </html>

@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 
 
 function inputValidation(inputs) {
-    const invalidChar = new Set(['-','=',';','"',"'",',']) 
+    const invalidChar = new Set(['--','=',';','"',"'",',']) 
 
     for (let k = 0; k < inputs.length; k++)
         for (let i = 0; i < inputs[k].length; i++) 
@@ -14,8 +14,6 @@ function inputValidation(inputs) {
  
     return true
 }
-
-
 
 
 
@@ -108,6 +106,45 @@ app.post('/register', (req, res) => {
             res.redirect("./register.html")
         }
     }
+});
+
+
+app.post('/post-item', (req, res) => {
+    const {title, description, category, postDate, username, price} = req.body
+    const validPostQuery = "SELECT count(*) FROM item WHERE username LIKE ? AND postDate LIKE ?";
+    const inputs = [title, description, category, postDate, username, price]
+    console.log([username, postDate])
+    if (inputValidation(inputs)) {
+        connection.execute(validPostQuery, [username, postDate], (error, results) => {
+            if(error) {
+                console.log("\n=========================ERROR=========================")
+                console.error("Error checking number of items: ", error)
+                console.log("==========================================================\n")
+
+                res.redirect("./home.html")
+            } else {
+                console.log(results[0]["count(*)"])
+                if (results[0]["count(*)"] < 2) {
+                    let insertItemQuery = "INSERT INTO item (title, descr, category, postDate, username, price) VALUES(?,?,?,?,?,?)"
+                    connection.execute(insertItemQuery, inputs, (error, results) => {
+                        if (error) {
+                            console.log("\n=========================ERROR=========================")
+                            console.error("Error inserting item: ", error)
+                            console.log("==========================================================\n")
+                        } else {
+                            console.log("item entered successfully")
+                        }
+                    })
+                }
+                else {
+                    console.log("cannot insert item, reached item addition limit for the day")
+                }
+            }
+        })
+    } else {
+        console.log("invalid inputs")
+    }
+    res.redirect("./home.html")
 });
 
 

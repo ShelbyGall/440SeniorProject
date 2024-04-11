@@ -14,6 +14,7 @@ create table item (
 	category	varchar(255) not null,
 	postDate	date not null,
     username 	varchar(255) not null,
+	price		Decimal(19,4) not null,
 	foreign key(username) references user(username),
 	primary key(itemID)
 );
