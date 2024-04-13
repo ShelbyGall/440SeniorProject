@@ -132,6 +132,9 @@
                 
                 <!-- Results should be populated here -->
                 <div id="searchResults">
+                  <ol>
+                    <li></li>
+                  </ol>
                     <!-- placeholder for search results -->
                 </div>
             </div>
@@ -157,5 +160,15 @@
 
         </script>
     </div>
+    <script>
+      
+      document.querySelector("#searchResults").addEventListener("click", function() {
+          if (event.target.tagName == "LI")  {
+            let item = event.target.innerText
+            
+          }
+        })
+
+    </script>
 </body>
 </html>
