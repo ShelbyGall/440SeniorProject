@@ -148,6 +148,24 @@ app.post('/post-item', (req, res) => {
 });
 
 
+app.get('/search-items', (req, res) => {
+    const categoryToSearch = req.query.category; // Accessing the category sent by the form
+    
+    // SQL query to select items from the 'item' table where the 'category' matches the search
+    const searchQuery = `SELECT * FROM item WHERE category = ?`;
+  
+    connection.execute(searchQuery, [categoryToSearch], (error, results) => {
+      if (error) {
+        console.error("Search Error:", error);
+        res.status(500).send("An error occurred during the search.");
+      } else {
+        // send back the results as JSON
+        res.json(results);
+      }
+    });
+  });  
+
+
 // Start the server
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);

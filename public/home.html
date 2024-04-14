@@ -73,6 +73,26 @@
             min-width: 0; 
           }
         }
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+
+        th, td {
+          border: 1px solid #ddd;
+          padding: 8px;
+          text-align: left;
+        }
+
+        th {
+          background-color: #4CAF50;
+          color: white;
+        }
+
+        tr:nth-child(even) {
+          background-color: #f2f2f2;
+        }
       </style>
       
 </head>
@@ -120,7 +140,7 @@
             <div class="form-column">
                 <h2>Search Items</h2>
                 <!-- form for searching items here -->
-                <form action="/search-items" method="GET" id="searchItemsForm">
+                <form action="/search-items" method="GET" id="searchItemsForm" onsubmit="return searchItems(event)">
                     <div class="form-group">
                         <label for="searchCategory">Category:</label>
                         <input type="text" name="category" id="searchCategory" placeholder="Enter category" required>
@@ -132,9 +152,6 @@
                 
                 <!-- Results should be populated here -->
                 <div id="searchResults">
-                  <ol>
-                    <li></li>
-                  </ol>
                     <!-- placeholder for search results -->
                 </div>
             </div>
@@ -158,17 +175,38 @@
             document.getElementById("post-date").value = pstDate.toJSON().slice(0,10)
           })
 
+          // function 'searchItems' handles the category search & display
+          function searchItems(event) {
+              event.preventDefault(); // stop form from causing a page refresh
+              var category = document.getElementById('searchCategory').value; // get value of search input
+              // start a fetch request to the server with the category as a URL parameter
+              fetch(`/search-items?category=${encodeURIComponent(category)}`)
+              .then(response => response.json()) // convert the response from the server to JSON
+              .then(data => {
+                // begin creating a string that will be converted to HTML inside the results div
+                var resultsTable = '<table>';
+                resultsTable += '<tr><th>Title</th><th>Description</th><th>Price</th></tr>'; // Table Headers
+                // loop through each item in the response data and create table rows
+                data.forEach(item => {
+                    resultsTable += `
+                        <tr>
+                            <td>${item.title}</td>
+                            <td>${item.descr}</td>
+                            <td>$${item.price}</td>
+                        </tr>
+                    `;
+                });
+                resultsTable += '</table>'; // close the table tag
+                // set the innerHTML of the searchResults div to the resultsTable, displaying the data
+                document.getElementById('searchResults').innerHTML = resultsTable;
+              })
+              .catch(error => {
+                  console.error('Error:', error);
+              });
+              return false;
+          }
+
         </script>
     </div>
-    <script>
-      
-      document.querySelector("#searchResults").addEventListener("click", function() {
-          if (event.target.tagName == "LI")  {
-            let item = event.target.innerText
-            
-          }
-        })
-
-    </script>
 </body>
 </html>
