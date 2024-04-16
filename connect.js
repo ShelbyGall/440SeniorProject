@@ -147,7 +147,7 @@ app.post('/post-item', (req, res) => {
     res.redirect("./home.html")
 });
 
-
+// search for items
 app.get('/search-items', (req, res) => {
     const categoryToSearch = req.query.category; // Accessing the category sent by the form
     
@@ -164,6 +164,88 @@ app.get('/search-items', (req, res) => {
       }
     });
   });  
+  
+
+// submit review for an item
+app.post('/post-review', (req, res) => {
+    const { itemId, username, rating, reviewText } = req.body;
+
+    const existingReviewCheck = `SELECT * FROM reviews WHERE username = ? AND itemID = ?`;
+    connection.execute(existingReviewCheck, [username, itemId], (reviewCheckErr, reviewCheckResults) => {
+        if (reviewCheckErr) {
+            console.error("Error checking for existing review:", reviewCheckErr);
+            return;
+        }
+
+        // if user has already reviewed the selected item
+        if (reviewCheckResults.length > 0) {
+            console.log("This item has already been reviewed by user:", username);
+            res.redirect("./home.html")
+            return;
+        }
+
+        const itemOwnershipQuery = `SELECT username FROM item WHERE itemID = ?`;
+        connection.execute(itemOwnershipQuery, [itemId], (ownershipError, ownershipResults) => {
+            if (ownershipError) {
+                console.error("Error checking item ownership:", ownershipError);
+                res.redirect("./home.html")
+                return;
+            }
+
+            // if the user is trying to review their own item
+            if (ownershipResults.length > 0 && ownershipResults[0].username === username) {
+                console.log(username, "is not allowed to review their own item!");
+                res.redirect("./home.html")
+                return;
+            }
+
+            const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD format
+            const reviewLimitQuery = `SELECT COUNT(*) AS count FROM reviews WHERE username = ? AND revDate = ?`;
+            connection.execute(reviewLimitQuery, [username, today], (error, results) => {
+                if (error) {
+                    console.error("Error checking review limits:", error);
+                    res.redirect("./home.html")
+                    return;
+                }
+
+                // if the user has reached their review limit
+                if (results[0].count >= 3) {
+                    console.log("Daily Review Limit Reached for User:", username);
+                    res.redirect("./home.html")
+                    return;
+                }
+
+                // If the review limit is not reached, proceed to insert the new review
+                const insertReviewQuery = `INSERT INTO reviews (rating, text, username, revDate, itemID) VALUES (?, ?, ?, ?, ?)`;
+                connection.execute(insertReviewQuery, [rating, reviewText, username, today, itemId], (insertError) => {
+                    if (insertError) {
+                        console.error("Error inserting review:", insertError);
+                        res.redirect("./home.html")
+                        return;
+                    }
+                    console.log("Review Successfully Posted by User:", username);
+                    res.redirect("./home.html")
+                });
+            });
+        });
+    });
+});
+
+  
+// get reviews for an item
+app.get('/get-reviews', (req, res) => {
+    const { itemId } = req.query;
+  
+    const getReviewsQuery = "SELECT * FROM reviews WHERE itemID = ?";
+    connection.execute(getReviewsQuery, [itemId], (error, results) => {
+      if (error) {
+        console.error("Error fetching reviews:", error);
+        return res.status(500).send("An error occurred fetching reviews.");
+      }
+  
+      res.json(results);
+    });
+});
 
 
 // Start the server

@@ -9,7 +9,7 @@
         .forms-section {
           display: flex;
           justify-content: space-around; /* This will place space around each column */
-          gap: 150px; /* Adjust the gap between columns */
+          gap: 0px; /* Adjust the gap between columns */
           margin: 20px 0;
         }
       
@@ -21,7 +21,7 @@
         }
       
         .container {
-          max-width: 1000px; /* Adjust the max-width as needed */
+          max-width: 1100px; /* Adjust the max-width as needed */
           margin: 0 auto; /* Center the container */
           padding: 20px;
           background-color: white;
@@ -93,6 +93,54 @@
         tr:nth-child(even) {
           background-color: #f2f2f2;
         }
+
+        /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+            position: relative;
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+            animation-name: animatetop;
+            animation-duration: 0.4s
+        }
+
+        /* Add Animation */
+        @keyframes animatetop {
+            from {top: -300px; opacity: 0} 
+            to {top: 0; opacity: 1}
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
       </style>
       
 </head>
@@ -104,6 +152,7 @@
 
         <!-- Form section with two columns -->
         <div class="forms-section">
+
             <!-- left column for adding new items -->
             <div class="form-column">
                 <h2>Add New Item</h2>
@@ -154,9 +203,39 @@
                 <div id="searchResults">
                     <!-- placeholder for search results -->
                 </div>
-            </div>
-        </div>
 
+                <!-- The Write Review Modal -->
+                <div id="writeReviewModal" class="modal">
+                  <div class="modal-content">
+                      <span class="close" onclick="closeModal('writeReviewModal')">&times;</span>
+                      <h2>Write a Review</h2>
+                      <form action="/post-review" method="POST" id="writeReviewForm">
+                          <select name="rating">
+                              <option value="excellent">Excellent</option>
+                              <option value="good">Good</option>
+                              <option value="fair">Fair</option>
+                              <option value="poor">Poor</option>
+                          </select>
+                          <textarea name="reviewText" placeholder="Write your review here" required></textarea>
+                          <input type="hidden" name="itemId" id="reviewItemId">
+                          <input type="hidden" name="username" id="reviewUsername">
+                          <button type="submit">Submit Review</button>
+                      </form>
+                  </div>
+                </div>
+                <div id="viewReviewsModal" class="modal">
+                  <div class="modal-content">
+                      <span class="close" onclick="closeModal('viewReviewsModal')">&times;</span>
+                      <h2>View Reviews</h2>
+                      <div id="reviewsContent">
+                          <!-- Reviews will be loaded here -->
+                      </div>
+                  </div>
+              </div>
+
+            </div>
+
+        </div>
 
         <a id="logout-button" href="./index.html">Logout</a>
         <script>
@@ -185,7 +264,7 @@
               .then(data => {
                 // begin creating a string that will be converted to HTML inside the results div
                 var resultsTable = '<table>';
-                resultsTable += '<tr><th>Title</th><th>Description</th><th>Price</th></tr>'; // Table Headers
+                resultsTable += '<tr><th>Title</th><th>Description</th><th>Price</th><th>Posted By</th><th>Actions</th></tr>'; // Table Headers
                 // loop through each item in the response data and create table rows
                 data.forEach(item => {
                     resultsTable += `
@@ -193,6 +272,11 @@
                             <td>${item.title}</td>
                             <td>${item.descr}</td>
                             <td>$${item.price}</td>
+                            <td>$${item.username}</td>
+                            <td>
+                              <button onclick="writeReview(${item.itemID})">Write Review</button>
+                              <button onclick="viewReviews(${item.itemID})">View Reviews</button>
+                            </td>
                         </tr>
                     `;
                 });
@@ -205,6 +289,44 @@
               });
               return false;
           }
+
+          // Function to show the modal for writing a review
+          function writeReview(itemId) {
+            document.getElementById('reviewItemId').value = itemId; // Set the itemId in the hidden input
+            document.getElementById('reviewUsername').value = localStorage.getItem('user'); // Set the username in the hidden input
+            document.getElementById('writeReviewModal').style.display = 'block'; // Show the modal
+          }
+
+          // Function to view reviews for a specific item
+          function viewReviews(itemId) {
+            fetch(`/get-reviews?itemId=${encodeURIComponent(itemId)}`)
+            .then(response => response.json())
+            .then(reviews => {
+              const reviewsList = reviews.map(review => `
+                  <div><b>Rating:</b> ${review.rating}</div>
+                  <div><b>Review:</b> ${review.text}</div>
+                  <div><b>By:</b> ${review.username}</div>
+                  <div><b>Date</b> ${review.revDate.slice(0, 10)}</div>
+                  <hr>
+              `).join('');
+              document.getElementById('reviewsContent').innerHTML = reviewsList;
+              document.getElementById('viewReviewsModal').style.display = 'block';
+            })
+            .catch(error => console.error('Error:', error));
+          }
+
+          // Function to open a modal
+          function openModal(modalId) {
+              var modal = document.getElementById(modalId);
+              modal.style.display = "block";
+          }
+
+          // Function to close a modal
+          function closeModal(modalId) {
+              var modal = document.getElementById(modalId);
+              modal.style.display = "none";
+          }
+
 
         </script>
     </div>
