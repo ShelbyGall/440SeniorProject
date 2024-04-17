@@ -20,3 +20,6 @@ insert into item (title,descr,category,postDate,username,price)
     
 insert into item (title,descr,category,postDate,username,price)
 	values("hat", "timberland", "clothing", "2024-04-10", "shell", 20);
+
+insert into reviews (rating, text, username, revDate, itemID)
+	values("poor", "item sucks", "RishRash", "2024-04-14", 1);
