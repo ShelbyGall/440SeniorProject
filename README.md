@@ -32,4 +32,4 @@ Run:
         copy the link in the terminal in your browser and explore the website
 
 YOUTUBE Phase 1 DEMO: https://www.youtube.com/watch?v=zhiK6x5Fm04
-YOUTUBE Phase 2 DEMO: 
+YOUTUBE Phase 2 DEMO: https://www.youtube.com/watch?v=lkJwVdY4Ub4
