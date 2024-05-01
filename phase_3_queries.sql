@@ -20,14 +20,29 @@ order by freq desc
 
 -- 4. WTF is favorited mean???
 
--- 5. ???? not sure if this works
-select distinct username
-from item as i
-where 3 > (
-	select count(itemID)
-    from reviews as r
-    where i.itemID = r.itemID and r.rating = "excellent"
+-- 5. Display all users that dont have 3 or more excellent reviews for a any item
+select username 
+from user
+where username not in (
+	select distinct username
+	from item as i
+	where 3 <= (
+		select count(r.itemID)
+		from reviews as r
+		where i.itemID = r.itemID and r.rating = "excellent"
+	)
 )
+
+-- *** NOTE: this is a less efficient query
+-- select username
+-- from user
+-- where username not in (
+-- 	select i.username
+-- 	from reviews as r, item as i
+-- 	where i.itemID = r.itemID and r.rating = "excellent"
+-- 	group by i.username
+-- 	having count(i.username) >= 3 
+-- )
 
 -- 6. all users that have given only reviews with a poor rating
 select username
