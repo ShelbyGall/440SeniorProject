@@ -301,18 +301,20 @@
                     </div>
                   </div>
                 </div>
-
+                
+              </div>
+              
+              
             </div>
-          </div>
+            
+            <!-- Results should be populated here -->
+            <div id="searchResults" style="max-width: 1030px;">
+                <!-- placeholder for search results -->
+            </div>
           
-          <!-- Results should be populated here -->
-          <div id="searchResults">
-              <!-- placeholder for search results -->
-          </div>
-        
-        <a id="logout-button" href="./index.html">Logout</a>
+          <a id="logout-button" href="./index.html">Logout</a>
 
-        
+
         <script>
           localStorage.setItem("confirm", true)
           document.getElementById("logout-button").addEventListener("click", function() {
@@ -413,12 +415,12 @@
               // .then(data => {
               //   // begin creating a string that will be converted to HTML inside the results div
               //   var resultsTable = '<table>';
-              //   resultsTable += '<tr><th>Title</th><th>Description</th><th>Price</th><th>Posted By</th><th>Actions</th></tr>'; // Table Headers
+                //   resultsTable += '<tr><th>Title</th><th>Description</th><th>Price</th><th>Posted By</th><th>Actions</th></tr>'; // Table Headers
               //   // loop through each item in the response data and create table rows
               //   data.forEach(item => {
               //       resultsTable += `
               //           <tr>
-              //               <td>${item.title}</td>
+                //               <td>${item.title}</td>
               //               <td>${item.descr}</td>
               //               <td>$${item.price}</td>
               //               <td>${item.username}</td>
@@ -439,7 +441,7 @@
               // return false;
           }
 
-        </script>
+          </script>
     </div>
 </body>
 </html>
