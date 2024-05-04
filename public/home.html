@@ -430,6 +430,26 @@
               .then(response => response.json()) // convert the response from the server to JSON
               .then(data => {
                 console.log(`Data: ${data}`)
+                let resultsTable = `<table><tr>`;
+                if (data.length > 0) {
+                    Object.keys(data[0]).forEach(key => {
+                        resultsTable += `<th>${key}</th>`;
+                    });
+                    resultsTable += `</tr>`;
+
+                    data.forEach(item => {
+                        resultsTable += `<tr>`;
+                        Object.values(item).forEach(value => {
+                            resultsTable += `<td>${value}</td>`;
+                        });
+                        resultsTable += `</tr>`;
+                    });
+                } else {
+                    resultsTable += `<td>No results found.</td></tr>`;
+                }
+
+                resultsTable += `</table>`;
+                document.getElementById('searchResults').innerHTML = resultsTable; // Display the results table
               })
               .catch(error => {
                   console.error(`Error: ${error}`);
