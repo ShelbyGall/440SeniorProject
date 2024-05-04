@@ -18,3 +18,18 @@ insert into item (title,descr,category,postDate,username,price)
 
 insert into reviews (rating, text, username, revDate, itemID)
 	values("poor", "item sucks", "RishRash", "2024-04-14", 1);
+
+insert into favorites (user_username, favorite_username) 
+	values('RishRash', 'shell');
+
+insert into favorites (user_username, favorite_username) 
+	values('dBoy', 'shell');
+
+insert into favorites (user_username, favorite_username) 
+	values('shell', 'RishRash');
+
+insert into favorites (user_username, favorite_username) 
+	values('dBoy', 'RishRash');
+
+insert into favorites (user_username, favorite_username) 
+	values('shell', 'dBoy');

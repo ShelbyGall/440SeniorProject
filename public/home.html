@@ -6,6 +6,9 @@
     <title>Home</title>
 
     <style>
+      /* * {
+        border: 2px dashed red;
+      } */
         .forms-section {
           display: flex;
           justify-content: space-around; /* This will place space around each column */
@@ -32,7 +35,7 @@
       
         input[type="text"],
         input[type="number"],
-        input[type="submit"],
+        button[type="submit"],
         textarea {
           width: 100%; /* Full width of parent */
           padding: 10px;
@@ -42,14 +45,14 @@
           box-sizing: border-box; /* Include padding and border in the element's total width and height */
         }
       
-        input[type="submit"] {
+        button[type="submit"] {
           background-color: #4CAF50;
           color: white;
           border: none;
           cursor: pointer;
         }
       
-        input[type="submit"]:hover {
+        button[type="submit"]:hover {
           opacity: 0.9;
         }
       
@@ -141,6 +144,30 @@
             text-decoration: none;
             cursor: pointer;
         }
+
+        #logout-button {
+          margin: 20px;
+          border: #50a5ff;
+          padding: 10px 40px;
+          border-radius: 10px;
+          background-color: #50a5ff;
+          color: white;
+          text-decoration: none;
+        }
+
+        .row {
+          display: flex;
+          flex-wrap:wrap;
+          align-items: left;
+          margin: 10px 0 10px 0;
+          border: 1px solid #dbdbdb;
+          border-radius: 10px;
+          padding: 10px;
+        }
+
+        .phase3-group label {
+          padding: 5px;
+        }
       </style>
       
 </head>
@@ -187,6 +214,8 @@
 
             <!-- right column for searching items -->
             <div class="form-column">
+
+
                 <h2>Search Items</h2>
                 <!-- form for searching items here -->
                 <form action="/search-items" method="GET" id="searchItemsForm" onsubmit="return searchItems(event)">
@@ -199,11 +228,52 @@
                     </div>
                 </form>
                 
-                <!-- Results should be populated here -->
-                <div id="searchResults">
-                    <!-- placeholder for search results -->
-                </div>
+                <!-- phase 3 queries -->
+                <h2>Phase 3 Queries</h2>
+                <form action="/query" method="GET" onsubmit="return queryResults(event)">
+                  <div class="phase3-group">
 
+                    <div class="row">
+                      <input type="radio" id="query1" name="phase3-queries"></input>
+                      <label for="query1">Most expensive item in each category</label>
+                    </div>
+
+                    <div class="row">
+                      <input type="radio" id="query2" name="phase3-queries" id=""></input>
+                      <label for="query2">Items by a user with all excellent or good reviews</label>
+                      <input type="text" id="Q2-User" placeholder="Enter Username">
+                    </div>
+
+                    <div class="row">
+                      <input type="radio" id="query3" name="phase3-queries"></input>
+                      <label for="query3">Users who posted the most number of items on "2024-04-29"</label>
+                    </div>
+                    
+                    <div class="row">
+                      <input type="radio" id="query4" name="phase3-queries"></input>
+                      <label for="query4">The user who is favorited by User 1 and User 2</label>
+                      <input type="text" id="Q4-User1" placeholder="Enter Username 1">
+                      <input type="text" id="Q4-User2" placeholder="Enter Username 2">
+                    </div>
+
+                    <div class="row">
+                      <input type="radio" id="query5" name="phase3-queries"></input>
+                      <label for="query5">Users who have no "Excellent" items </label>
+                    </div>
+
+                    <div class="row">
+                      <input type="radio" id="query6" name="phase3-queries"></input>
+                      <label for="query6">Users who posted only poor reviews</label>
+                    </div>
+
+                  </div>
+                  <div class="form-group">
+                    <button type="submit">Query</button>
+                  </div>
+                </form>
+
+                
+                
                 <!-- The Write Review Modal -->
                 <div id="writeReviewModal" class="modal">
                   <div class="modal-content">
@@ -223,21 +293,30 @@
                       </form>
                   </div>
                 </div>
+
                 <div id="viewReviewsModal" class="modal">
                   <div class="modal-content">
-                      <span class="close" onclick="closeModal('viewReviewsModal')">&times;</span>
-                      <h2>View Reviews</h2>
-                      <div id="reviewsContent">
-                          <!-- Reviews will be loaded here -->
-                      </div>
+                    <span class="close" onclick="closeModal('viewReviewsModal')">&times;</span>
+                    <h2>View Reviews</h2>
+                    <div id="reviewsContent">
+                      <!-- Reviews will be loaded here -->
+                    </div>
                   </div>
+                </div>
+                
               </div>
-
+              
+              
             </div>
+            
+            <!-- Results should be populated here -->
+            <div id="searchResults" style="max-width: 1030px;">
+                <!-- placeholder for search results -->
+            </div>
+          
+          <a id="logout-button" href="./index.html">Logout</a>
 
-        </div>
 
-        <a id="logout-button" href="./index.html">Logout</a>
         <script>
           localStorage.setItem("confirm", true)
           document.getElementById("logout-button").addEventListener("click", function() {
@@ -263,7 +342,7 @@
               .then(response => response.json()) // convert the response from the server to JSON
               .then(data => {
                 // begin creating a string that will be converted to HTML inside the results div
-                var resultsTable = '<table>';
+                var resultsTable = '<table style="margin:40px;">';
                 resultsTable += '<tr><th>Title</th><th>Description</th><th>Price</th><th>Posted By</th><th>Actions</th></tr>'; // Table Headers
                 // loop through each item in the response data and create table rows
                 data.forEach(item => {
@@ -272,7 +351,7 @@
                             <td>${item.title}</td>
                             <td>${item.descr}</td>
                             <td>$${item.price}</td>
-                            <td>$${item.username}</td>
+                            <td>${item.username}</td>
                             <td>
                               <button onclick="writeReview(${item.itemID})">Write Review</button>
                               <button onclick="viewReviews(${item.itemID})">View Reviews</button>
@@ -328,7 +407,59 @@
           }
 
 
-        </script>
+          function queryResults(event) {
+              event.preventDefault(); // stop form from causing a page refresh
+
+              // get the query that is selected via the radio button
+              let qid = document.querySelector("input[name='phase3-queries']:checked").id
+              let userIn = []
+
+              // get user input depending on the query selected
+              if (qid == "query2") {
+                userIn.push(document.getElementById("Q2-User").value)
+              } 
+              else if (qid == "query4") {
+                userIn.push(document.getElementById("Q4-User1").value)
+                userIn.push(document.getElementById("Q4-User2").value)
+              }
+              
+              console.log(userIn)
+        
+              // start a fetch request to the server with the category as a URL parameter
+              fetch(`/query?userIn=${encodeURIComponent(userIn)}&qid=${qid}`)
+              .then(response => response.json()) // convert the response from the server to JSON
+              .then(data => {
+                console.log(`Data: ${data}`)
+              })
+              .catch(error => {
+                  console.error(`Error: ${error}`);
+              });
+              //   // begin creating a string that will be converted to HTML inside the results div
+              //   var resultsTable = '<table>';
+                //   resultsTable += '<tr><th>Title</th><th>Description</th><th>Price</th><th>Posted By</th><th>Actions</th></tr>'; // Table Headers
+              //   // loop through each item in the response data and create table rows
+              //   data.forEach(item => {
+              //       resultsTable += `
+              //           <tr>
+                //               <td>${item.title}</td>
+              //               <td>${item.descr}</td>
+              //               <td>$${item.price}</td>
+              //               <td>${item.username}</td>
+              //               <td>
+              //                 <button onclick="writeReview(${item.itemID})">Write Review</button>
+              //                 <button onclick="viewReviews(${item.itemID})">View Reviews</button>
+              //               </td>
+              //           </tr>
+              //       `;
+              //   });
+              //   resultsTable += '</table>'; // close the table tag
+              //   // set the innerHTML of the searchResults div to the resultsTable, displaying the data
+              //   document.getElementById('searchResults').innerHTML = resultsTable;
+              // })
+              
+          }
+
+          </script>
     </div>
 </body>
 </html>

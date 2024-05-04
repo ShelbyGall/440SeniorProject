@@ -248,6 +248,40 @@ app.get('/get-reviews', (req, res) => {
 });
 
 
+function getQuery(qid) {
+    if (qid == "query1")
+      return 'select title, category, price  from item  where price in (select max(price)  from item  group by category)'
+    else if (qid == "query2")
+      return "SELECT i.itemID, i.title, i.descr FROM item i JOIN reviews r ON i.itemID = r.itemID WHERE i.username = ? GROUP BY i.itemID, i.title, i.descr HAVING COUNT(*) = SUM(r.rating IN ('Excellent', 'Good'))"
+    else if (qid == "query3")
+      return 'select username, count(username) as freq  from item  where postDate = "2024-04-29"  group by username  order by freq desc'
+    else if (qid == "query4")
+      return 'SELECT f1.favorite_username  FROM favorites f1  JOIN favorites f2 ON f1.favorite_username = f2.favorite_username  WHERE f1.user_username = ? AND f2.user_username = ? AND f1.user_username != f2.user_username;'
+    else if (qid == "query5")
+      return 'select username  from user where username not in ( select distinct username from item as i where 3 <= ( select count(r.itemID) from reviews as r where i.itemID = r.itemID and r.rating = "excellent" ))'
+    else if (qid == "query6")
+      return 'select username  from reviews as r  group by username  having count(username) = (select count(username)  from reviews  where r.username = username and rating = "poor")'
+}
+
+app.get('/query', (req, res) => {
+    let {userIn, qid} = req.query
+    let queryPrompt = getQuery(qid)
+    userIn = userIn.split(",")
+    console.log(`userIn: ${userIn}`)
+    console.log(`qid: ${qid}`)
+
+    connection.execute(queryPrompt, userIn, (error, results) => {
+        if (error) {
+          console.error("Error fetching query:", error);
+          return res.status(500).send("An error occurred performing query.");
+        }
+        
+        console.log(results)
+        res.json(results);
+      });
+}) 
+
+
 // Start the server
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
