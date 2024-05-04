@@ -22,6 +22,12 @@ group by username
 order by freq desc
 
 -- 4. WTF is favorited mean???
+-- INPUT NEEDED
+SELECT f1.favorite_username
+FROM favorites f1
+JOIN favorites f2 ON f1.favorite_username = f2.favorite_username
+WHERE f1.user_username = ? AND f2.user_username = ?
+AND f1.user_username != f2.user_username;
 
 -- 5. Display all users that dont have 3 or more excellent reviews for a any item
 -- NO INPUT NEEDED

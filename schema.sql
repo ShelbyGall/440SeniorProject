@@ -29,3 +29,10 @@ create table reviews (
     foreign key(itemID) references item(itemID)
 );
 
+CREATE TABLE favorites (
+    user_username VARCHAR(255) NOT NULL,
+    favorite_username VARCHAR(255) NOT NULL,
+    FOREIGN KEY (user_username) REFERENCES user(username),
+    FOREIGN KEY (favorite_username) REFERENCES user(username),
+    UNIQUE (user_username, favorite_username)  
+);

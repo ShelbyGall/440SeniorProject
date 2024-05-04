@@ -230,7 +230,7 @@
                 
                 <!-- phase 3 queries -->
                 <h2>Phase 3 Queries</h2>
-                <form>
+                <form action="/query" method="GET" onsubmit="return queryResults(event)">
                   <div class="phase3-group">
 
                     <div class="row">
@@ -239,9 +239,9 @@
                     </div>
 
                     <div class="row">
-                      <input type="radio" id="query2" name="phase3-queries"></input>
-                      <label for="query2">All excellent or good reviewed items by a user</label>
-                      <input type="text" placeholder="Enter Username">
+                      <input type="radio" id="query2" name="phase3-queries" id=""></input>
+                      <label for="query2">Items by a user with all excellent or good reviews</label>
+                      <input type="text" id="Q2-User" placeholder="Enter Username">
                     </div>
 
                     <div class="row">
@@ -251,7 +251,9 @@
                     
                     <div class="row">
                       <input type="radio" id="query4" name="phase3-queries"></input>
-                      <label for="query4">??????????????????????????</label>
+                      <label for="query4">The user who is favorited by User 1 and User 2</label>
+                      <input type="text" id="Q4-User1" placeholder="Enter Username 1">
+                      <input type="text" id="Q4-User2" placeholder="Enter Username 2">
                     </div>
 
                     <div class="row">
@@ -406,13 +408,32 @@
 
 
           function queryResults(event) {
-              // event.preventDefault(); // stop form from causing a page refresh
+              event.preventDefault(); // stop form from causing a page refresh
+
+              // get the query that is selected via the radio button
+              let qid = document.querySelector("input[name='phase3-queries']:checked").id
+              let userIn = []
+
+              // get user input depending on the query selected
+              if (qid == "query2") {
+                userIn.push(document.getElementById("Q2-User").value)
+              } 
+              else if (qid == "query4") {
+                userIn.push(document.getElementById("Q4-User1").value)
+                userIn.push(document.getElementById("Q4-User2").value)
+              }
+              
+              console.log(userIn)
         
-              // var category = document.getElementById('searchCategory').value; // get value of search input
-              // // start a fetch request to the server with the category as a URL parameter
-              // fetch(`/search-items?category=${encodeURIComponent(category)}`)
-              // .then(response => response.json()) // convert the response from the server to JSON
-              // .then(data => {
+              // start a fetch request to the server with the category as a URL parameter
+              fetch(`/query?userIn=${encodeURIComponent(userIn)}&qid=${qid}`)
+              .then(response => response.json()) // convert the response from the server to JSON
+              .then(data => {
+                console.log(`Data: ${data}`)
+              })
+              .catch(error => {
+                  console.error(`Error: ${error}`);
+              });
               //   // begin creating a string that will be converted to HTML inside the results div
               //   var resultsTable = '<table>';
                 //   resultsTable += '<tr><th>Title</th><th>Description</th><th>Price</th><th>Posted By</th><th>Actions</th></tr>'; // Table Headers
@@ -435,10 +456,7 @@
               //   // set the innerHTML of the searchResults div to the resultsTable, displaying the data
               //   document.getElementById('searchResults').innerHTML = resultsTable;
               // })
-              // .catch(error => {
-              //     console.error('Error:', error);
-              // });
-              // return false;
+              
           }
 
           </script>
