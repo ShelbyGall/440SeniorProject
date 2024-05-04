@@ -254,7 +254,7 @@ function getQuery(qid) {
     else if (qid == "query2")
       return "SELECT i.itemID, i.title, i.descr FROM item i JOIN reviews r ON i.itemID = r.itemID WHERE i.username = ? GROUP BY i.itemID, i.title, i.descr HAVING COUNT(*) = SUM(r.rating IN ('Excellent', 'Good'))"
     else if (qid == "query3")
-      return 'select username, count(username) as freq  from item  where postDate = "2024-04-29"  group by username  order by freq desc'
+      return "select username, count(username) as 'Number of Items'  from item as i  where postDate = '2024-04-15'  group by username  having count(username) = (select count(username) from item where postDate = '2024-04-15' group by username order by count(username) desc limit 1)"
     else if (qid == "query4")
       return 'SELECT f1.favorite_username  FROM favorites f1  JOIN favorites f2 ON f1.favorite_username = f2.favorite_username  WHERE f1.user_username = ? AND f2.user_username = ? AND f1.user_username != f2.user_username;'
     else if (qid == "query5")
