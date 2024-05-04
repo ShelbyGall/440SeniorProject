@@ -6,20 +6,33 @@ where price in (select max(price) from item group by category)
 
 -- 2. shell can be changed to any user
 -- **INPUT NEEDED**
-select i.title, i.descr, i.category, i.username as Poster, i.category, r.username as Reviewer, r.text,r.rating
-from item as i, reviews as r
-where i.username = "shell" and i.itemID = r.itemID and (r.rating = "excellent" or r.rating = "good")
+SELECT i.itemID, i.title, i.descr
+FROM item i
+JOIN reviews r ON i.itemID = r.itemID
+WHERE i.username = "shell"
+GROUP BY i.itemID, i.title, i.descr
+HAVING COUNT(*) = SUM(r.rating IN ('Excellent', 'Good'))
+
+
+
 
 -- 3. we will have to go through the results to check
 --    for what has the highest freq or display all with 
 --    highest freq if there are duplicates
 --    postDate can be changed to any date
 -- CHOOSE WHETHER TO HARD CODE OR NOT
-select username, count(username) as freq
-from item 
-where postDate = "2024-04-29"
+select username, count(username) as "Number of Items"
+from item as i
+where postDate = "2024-04-17"
 group by username
-order by freq desc
+having count(username) = (
+	select count(username) 
+    from item 
+    where postDate = "2024-04-17"
+    group by username 
+    order by count(username) desc
+    limit 1
+    )
 
 -- 4. WTF is favorited mean???
 -- INPUT NEEDED
