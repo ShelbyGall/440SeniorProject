@@ -46,6 +46,9 @@ insert into item (title,descr,category,postDate,username,price)
 insert into item (title,descr,category,postDate,username,price)
 	values("Cybertruck", "Teslas CyberTruck in gray", "miscellaneous", "2024-04-15", "goober", 20050);
 
+insert into item (title,descr,category,postDate,username,price)
+	values("Lego Spiderman", "440 piece lego set featuring spiderman", "miscellaneous", "2024-04-16", "goober", 90);
+
 
 
 
@@ -73,7 +76,7 @@ insert into reviews (rating, text, username, revDate, itemID)
 	values("poor", "came completely cracked", "dBoy", "2024-04-17", 1);
 
 insert into reviews (rating, text, username, revDate, itemID)
-	values("poor", "there is no charger!", "dBoy", "2024-04-17", 2;
+	values("poor", "there is no charger!", "dBoy", "2024-04-17", 2);
 
 insert into reviews (rating, text, username, revDate, itemID)
 	values("poor", "the hat looks absolutely stupid", "dBoy", "2024-04-17", 3);
@@ -83,6 +86,11 @@ insert into reviews (rating, text, username, revDate, itemID)
 
 insert into reviews (rating, text, username, revDate, itemID)
 	values("fair", "Its a pretty cool watch but fits a little too big", "shell", "2024-04-16", 5);
+    
+insert into reviews (rating, text, username, revDate, itemID)
+	values("good", "I really love spiderman", "shell", "2024-04-16", 9);
+    
+    
 
 
 

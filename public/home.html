@@ -246,7 +246,7 @@
 
                     <div class="row">
                       <input type="radio" id="query3" name="phase3-queries"></input>
-                      <label for="query3">Users who posted the most number of items on "2024-04-29"</label>
+                      <label for="query3">Users who posted the most number of items on "2024-04-15"</label>
                     </div>
                     
                     <div class="row">
@@ -314,7 +314,7 @@
                 <!-- placeholder for search results -->
             </div>
           
-          <a id="logout-button" href="./index.html">Logout</a>
+            <a id="logout-button" href="./index.html">Logout</a>
 
 
         <script>
@@ -430,7 +430,7 @@
               .then(response => response.json()) // convert the response from the server to JSON
               .then(data => {
                 console.log(`Data: ${data}`)
-                let resultsTable = `<table><tr>`;
+                let resultsTable = `<table style="margin:40px;"><tr>`;
                 if (data.length > 0) {
                     Object.keys(data[0]).forEach(key => {
                         resultsTable += `<th>${key}</th>`;
@@ -453,30 +453,7 @@
               })
               .catch(error => {
                   console.error(`Error: ${error}`);
-              });
-              //   // begin creating a string that will be converted to HTML inside the results div
-              //   var resultsTable = '<table>';
-                //   resultsTable += '<tr><th>Title</th><th>Description</th><th>Price</th><th>Posted By</th><th>Actions</th></tr>'; // Table Headers
-              //   // loop through each item in the response data and create table rows
-              //   data.forEach(item => {
-              //       resultsTable += `
-              //           <tr>
-                //               <td>${item.title}</td>
-              //               <td>${item.descr}</td>
-              //               <td>$${item.price}</td>
-              //               <td>${item.username}</td>
-              //               <td>
-              //                 <button onclick="writeReview(${item.itemID})">Write Review</button>
-              //                 <button onclick="viewReviews(${item.itemID})">View Reviews</button>
-              //               </td>
-              //           </tr>
-              //       `;
-              //   });
-              //   resultsTable += '</table>'; // close the table tag
-              //   // set the innerHTML of the searchResults div to the resultsTable, displaying the data
-              //   document.getElementById('searchResults').innerHTML = resultsTable;
-              // })
-              
+              });              
           }
 
           </script>

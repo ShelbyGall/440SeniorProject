@@ -1,14 +1,29 @@
 Authors:
-    Daniel Barlam
     Shelby Gallegos
     Rishabh Chadha
+
+
+
+Contributions:
+    Shelby Gallegos
+        Backend: Half of the backend for all three phases were handled by me.
+        Frontend: Half of the frontend for all three phases were handled by me.
+
+
+    Rishabh Chadha
+        Backend: Half of the backend for all three phases were handled by me.
+        Frontend: Half of the frontend for all three phases were handled by me.
+
+
 
 Installation:
     Node.js     Install through browser
     express.js  npm install express
     dotenv      npm install dotenv
     mysql2      npm install mysql2
-    
+
+
+
 Run:
     1.
         To run, congfigure your .env file to have the correct fields
@@ -31,5 +46,8 @@ Run:
     4.
         copy the link in the terminal in your browser and explore the website
 
+
+
 YOUTUBE Phase 1 DEMO: https://www.youtube.com/watch?v=zhiK6x5Fm04
 YOUTUBE Phase 2 DEMO: https://www.youtube.com/watch?v=lkJwVdY4Ub4
+YOUTUBE Phase 3 DEMO: https://www.youtube.com/watch?v=rmJOQRLmymY

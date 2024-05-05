@@ -23,18 +23,18 @@ HAVING COUNT(*) = SUM(r.rating IN ('Excellent', 'Good'))
 -- CHOOSE WHETHER TO HARD CODE OR NOT
 select username, count(username) as "Number of Items"
 from item as i
-where postDate = "2024-04-17"
+where postDate = "2024-04-15"
 group by username
 having count(username) = (
 	select count(username) 
     from item 
-    where postDate = "2024-04-17"
+    where postDate = "2024-04-15"
     group by username 
     order by count(username) desc
     limit 1
     )
 
--- 4. WTF is favorited mean???
+-- 4. Get shared favorite user of two users
 -- INPUT NEEDED
 SELECT f1.favorite_username
 FROM favorites f1
